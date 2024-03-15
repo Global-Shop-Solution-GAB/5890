@@ -1,0 +1,61 @@
+﻿Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+
+v.Local.bShoudRun.Declare(Boolean, False)
+
+v.Local.bPassedIsCreatingPartsExists.Declare(Boolean, False)
+v.Local.bPassedHasLongPartsExists.Declare(Boolean, False)
+
+Function.Intrinsic.Variable.PassedExists("IsCreatingParts", v.Local.bPassedIsCreatingPartsExists)
+Function.Intrinsic.Variable.PassedExists("HasLongParts", v.Local.bPassedHasLongPartsExists)
+
+Function.Intrinsic.Control.If(v.Local.bPassedIsCreatingPartsExists,=,True)
+	Function.Intrinsic.Control.If(v.Passed.IsCreatingParts)
+		v.Local.bShoudRun.Set(True)	
+	Function.Intrinsic.Control.EndIf
+Function.Intrinsic.Control.Else
+	v.Local.bShoudRun.Set(True)
+Function.Intrinsic.Control.EndIf
+
+Function.Intrinsic.Control.If(v.Local.bPassedHasLongPartsExists,=,True)
+	Function.Intrinsic.Control.If(v.Passed.HasLongParts,=,False)
+		v.Local.bShoudRun.Set(False)	
+	Function.Intrinsic.Control.EndIf
+Function.Intrinsic.Control.EndIf
+
+Function.Intrinsic.Control.If(v.Local.bShoudRun,=,True)
+	Function.Intrinsic.UI.InvokeWaitDialog("Please Wait...","Creating Long Part")
+
+	v.Local.sScriptInv.Declare(String)
+	v.Local.sScriptRtr.Declare(String)
+	v.Local.sScriptBom.Declare(String)
+	
+	
+	Function.Intrinsic.String.Concat(v.Caller.GasDir, "\OU_MAINT_ATG_BRW_INVENTORY.gas", v.Local.sScriptInv)
+	Function.Intrinsic.String.Concat(v.Caller.GasDir, "\OU_MAINT_ATG_BRW_Router.gas", v.Local.sScriptRtr)
+	Function.Intrinsic.String.Concat(v.Caller.GasDir, "\OU_MAINT_ATG_BRW_BOM.gas", v.Local.sScriptBom)
+	
+	Function.Intrinsic.UI.ChangeWaitStatus("Creating Inventory Records...")
+	Function.Global.General.CallSyncGAS(v.Local.sScriptInv, ,2)
+	
+	Function.Intrinsic.UI.ChangeWaitStatus("Creating Router Records...")
+	Function.Global.General.CallSyncGAS(v.Local.sScriptRtr, ,2)
+	
+	Function.Intrinsic.UI.ChangeWaitStatus("Creating BOM Records...")
+	Function.Global.General.CallSyncGAS(v.Local.sScriptBom, ,2)
+	
+	Function.Intrinsic.UI.ChangeWaitStatus("Complete.",100,0,100)
+	Function.Intrinsic.UI.SleepMS(500)
+	Function.Intrinsic.UI.CloseWaitDialog
+	
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+Program.Sub.Comments.Start
+${$5$}$3.0.0.0$}$1
+${$6$}$jdombrowski$}$20210205113048429$}$aj9MKujIHavBmuZgeJy6fTVarNkErGTBKYBVDGjI34OYt/nsGKnCBoJYJV/2LUDE2Ok2IWbp5lawSBJVfQMaLQ==
+Program.Sub.Comments.End
